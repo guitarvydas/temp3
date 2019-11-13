@@ -32,8 +32,8 @@
 ;; be rewritten to match that of the receiving pin, and the newly-created event is pushed
 ;; onto the input queue of the receiving part.
 
-(defmethod deliver-event ((r inbound-receiver) (e a:event))
-  (let ((new-e (e/event::new-event :pin (pin r) :data (e/event::data e))))
+(defmethod deliver-event ((r inbound-receiver) (e e/event:event))
+  (let ((new-e (e/event::new-event :pin (pin r) :data (e/event:data e))))
     (push new-e (input-queue (part r)))))
 
 
