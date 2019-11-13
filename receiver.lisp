@@ -41,6 +41,6 @@
 ;; be rewritten to match that of the receiving pin, and the newly-created event is pushed
 ;; onto the output queue of the enclosing schematic.
 
-(defmethod deliver-event ((r outbound-receiver) (e a:event))
+(defmethod deliver-event ((r outbound-receiver) (e e/event:event))
   (let ((new-e (e/event::new-event :pin (pin r) :data (e/event::data e))))
     (push new-e (output-queue (part r)))))
