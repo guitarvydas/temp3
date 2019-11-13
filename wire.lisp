@@ -4,7 +4,7 @@
 
 (defclass wire ()
   ((receivers :accessor receivers :initform nil)
-   (name :accessor name :initarg name)))
+   (debug-name :accessor debug-name :initarg :name)))
 
 (defun new-wire (&key (name ""))
   (make-instance 'wire :name name)

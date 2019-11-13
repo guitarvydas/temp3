@@ -1,25 +1,6 @@
 (defpackage cl-event-passing
   (:nicknames :a)
-  (:use :cl)
-  (:export
-   #:implementable
-   #:event
-   #:pin
-   #:data
-   #:wire
-   #:receivers
-   #:part
-   #:terminal
-   #:schematic
-   #:internal-parts
-   #:internal-wires
-   #:input-queue
-   #:output-queue
-   #:busy-flag
-   #:namespace-input-pins
-   #:namespace-output-pins
-   #:input-handler
-   #:first-time-handler))
+  (:use :cl))
 
 (defpackage cl-event-passing-user
   ;; top level API
@@ -36,27 +17,65 @@
    #:@set-input-handler
    #:@add-inbound-receiver-to-wire
    #:@add-source-to-schematic
+   #:@add-part-to-schematic
    #:@start-dispatcher))
 
 (defpackage cl-event-passing-part
   (:nicknames :e/part)
-  (:use :cl))
+  (:use :cl)
+  (:export
+   #:part
+   #:code
+   #:name
+   #:input-queue
+   #:output-queue
+   #:busy-flag
+   #:namespace-input-pins
+   #:namespace-output-pins
+   #:input-handler
+   #:first-time-handler))
 
 (defpackage cl-event-passing-event
   (:nicknames :e/event)
-  (:use :cl))
+  (:use :cl)
+  (:export
+   #:event
+   #:pin
+   #:data))
 
 (defpackage cl-event-passing-source
   (:nicknames :e/source)
-  (:use :cl))
+  (:use :cl)
+  (:export
+   #:source
+   #:part
+   #:pin
+   #:wire))
 
 (defpackage cl-event-passing-receiver
   (:nicknames :e/receiver)
-  (:use :cl))
+  (:use :cl)
+  (:export
+   #:part
+   #:pin
+   #:inbound-receiver
+   #:outbound-receiver))
 
 (defpackage cl-event-passing-schematic
   (:nicknames :e/schematic)
-  (:use :cl))
+  (:use :cl)
+  (:export
+   #:name
+   #:schematic
+   #:internal-parts
+   #:internal-wires
+   #:input-queue
+   #:output-queue
+   #:busy-flag
+   #:namespace-input-pins
+   #:namespace-output-pins
+   #:input-handler
+   #:first-time-handler))
 
 (defpackage cl-event-passing-dispatch
   (:nicknames :e/dispatch)
@@ -68,3 +87,9 @@
   (:export
    #:ensure-not-in-list))
 
+(defpackage cl-event-passing-user-wire
+  (:nicknames :e/wire)
+  (:use :cl)
+  (:export
+   #:wire
+   #:receivers))

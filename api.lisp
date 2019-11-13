@@ -15,6 +15,9 @@
 (defun @initialize ()
   (e/dispatch::reset))
 
+(defmethod @top-level-schematic ((schem e/schematic:schematic))
+  (e/dispatch::memo-part shem))
+
 (defmethod @set-first-time-handler ((part e/part:part) fn)
   (setf (e/part::first-time-handler part) fn))
 
@@ -42,5 +45,3 @@
    (e/dispatch::dispatch-output-queues)
    (e/dispatch::dispatch-sinlge-input)))
 
-(defmethod @top-level-schematic ((schem e/schematic:schematic))
-  (e/dispatch::memo-part shem))
