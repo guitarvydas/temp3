@@ -44,6 +44,7 @@
   (:use :cl)
   (:export
    #:event
+   #:new-event
    #:pin
    #:data))
 
