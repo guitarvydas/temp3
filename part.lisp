@@ -8,6 +8,7 @@
    (namespace-output-pins :accessor namespace-output-pins :initform nil) ;; a list of pin symbols
    (input-handler :accessor input-handler :initform nil) ;; nil or a function
    (first-time-handler :accessor first-time-handler :initform nil) ;; nil or a function
+   (parent-schem :accessor parent-schem :initform nil :initarg :parent-schem)
    (debug-name :accessor debug-name :initarg :name :initform ""))) ;; for debug
 
 (defclass code (part) ())

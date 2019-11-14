@@ -18,6 +18,7 @@
    #:@add-inbound-receiver-to-wire
    #:@add-source-to-schematic
    #:@add-part-to-schematic
+   #:@send
    #:@start-dispatcher))
 
 (defpackage cl-event-passing-part
@@ -33,7 +34,8 @@
    #:namespace-input-pins
    #:namespace-output-pins
    #:input-handler
-   #:first-time-handler))
+   #:first-time-handler
+   #:parent-schem))
 
 (defpackage cl-event-passing-event
   (:nicknames :e/event)
@@ -58,6 +60,7 @@
   (:export
    #:part
    #:pin
+   #:receiver
    #:inbound-receiver
    #:outbound-receiver))
 
@@ -75,7 +78,8 @@
    #:namespace-input-pins
    #:namespace-output-pins
    #:input-handler
-   #:first-time-handler))
+   #:first-time-handler
+   #:parent-schem))
 
 (defpackage cl-event-passing-dispatch
   (:nicknames :e/dispatch)

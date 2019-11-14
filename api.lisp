@@ -1,10 +1,13 @@
-(in-package :cl-event-processing-user)
+(in-package :cl-event-passing-user)
 
 (defun @new-schematic (&key (name ""))
   (e/schematic::new-schematic :name name))
 
-(defun @new-code (&key (name ""))
-  (e/part::new-code :name name))
+(defun @new-code (&key (name "") (input-pins nil) (output-pins nil))
+  (let ((part (e/part::new-code :name name)))
+    (setf (e/part:namespace-input-pins part) input-pins)
+    (setf (e/part:namespace-output-pins part) output-pins)
+    part))
 
 (defun @new-wire (&key (name ""))
   (e/wire::new-wire :name name))
@@ -16,7 +19,7 @@
   (e/dispatch::reset))
 
 (defmethod @top-level-schematic ((schem e/schematic:schematic))
-  (e/dispatch::memo-part shem))
+  (e/dispatch::memo-part schem))
 
 (defmethod @set-first-time-handler ((part e/part:part) fn)
   (setf (e/part::first-time-handler part) fn))
@@ -25,8 +28,8 @@
   (setf (e/part::input-handler part) fn))
 
 (defmethod @add-inbound-receiver-to-wire ((wire e/wire:wire) (part e/part:part) pin-sym)
-  (let ((rcv ('e/receiver::new-inbound-receiver :part part :pin pin-sym)))
-    (e/wire::ensure-receiver-not-alreader-on-wire wire rcv)
+  (let ((rcv (e/receiver::new-inbound-receiver :part part :pin pin-sym)))
+    (e/wire::ensure-receiver-not-already-on-wire wire rcv)
     (e/wire::add-receiver wire rcv)))
 
 (defmethod @add-source-to-schematic ((schem e/schematic:schematic) (part e/part:part) pin-sym (wire e/wire:wire))
@@ -34,14 +37,18 @@
     (e/schematic::ensure-source-not-already-present schem s)
     (e/schematic::add-source schem s)))
 
-(defmethod @add-part-to-schematic ((self e/schematic:schematic) (part e/part:part))
-  (e/schematic::ensure-part-not-already-present schem p)
-  (e/schematic::add-part schem p)
+(defmethod @add-part-to-schematic ((schem e/schematic:schematic) (part e/part:part))
+  (e/schematic::ensure-part-not-already-present schem part)
+  (e/schematic::add-part schem part)
   (e/dispatch::memo-part part))
 
+(defmethod @send ((self e/part:part) (e e/event:event))
+  (push e (e/part:output-queue self)))
+
 (defun @start-dispatcher ()
-  (@loop
-   (@:exit-when (e/dispatch::all-parts-have-empty-input-queues-p))
+  (e/dispatch::run-first-times)
+  (@:loop
    (e/dispatch::dispatch-output-queues)
-   (e/dispatch::dispatch-sinlge-input)))
+   (@:exit-when (e/dispatch::all-parts-have-empty-input-queues-p))
+   (e/dispatch::dispatch-single-input)))
 

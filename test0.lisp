@@ -1,4 +1,4 @@
-(in-package :cl-event-processing-user)
+(in-package :cl-event-passing-user)
 
 (defun test0 ()
   (@initialize)
@@ -16,7 +16,7 @@
     (@set-first-time-handler producer #'produce)
     (@set-input-handler consumer #'consume-and-print)
 
-    (@add-inbound-receiver-to-wire schem wire consumer :in)
+    (@add-inbound-receiver-to-wire wire consumer :in)
     (@add-source-to-schematic schem producer :out wire)
 
     (@start-dispatcher)))
@@ -27,6 +27,6 @@
 
 (defmethod consume-and-print ((self e/part:part) (e e/event:event))
   (format *standard-output* "~&consumed message ~S on incoming pin ~S of ~S~%"
-          (e/event::data e) (e/event::pin e) self))
+          (e/event::data e) (e/event::pin e) (e/part:name self)))
 
   

@@ -1,2 +1,4 @@
 * status
-** alpha - untested, has temp3.asd and data-structures.drawio (with a tab for each kind of class)
+** first light - (ql:quickload :temp3), (aa::test0) ==> "CL-USER 22 > (aa::test0)
+   consumed message "hello" on incoming pin :IN of "consumer"
+   NIL"

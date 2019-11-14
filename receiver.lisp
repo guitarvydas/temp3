@@ -34,7 +34,7 @@
 
 (defmethod deliver-event ((r inbound-receiver) (e e/event:event))
   (let ((new-e (e/event::new-event :pin (pin r) :data (e/event:data e))))
-    (push new-e (input-queue (part r)))))
+    (push new-e (e/part:input-queue (part r)))))
 
 
 ;; At this point, the Event contains the originating output pin.  The pin must
@@ -43,4 +43,4 @@
 
 (defmethod deliver-event ((r outbound-receiver) (e e/event:event))
   (let ((new-e (e/event::new-event :pin (pin r) :data (e/event::data e))))
-    (push new-e (output-queue (part r)))))
+    (push new-e (e/part:output-queue (part r)))))

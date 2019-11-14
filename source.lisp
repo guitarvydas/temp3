@@ -7,3 +7,7 @@
 
 (defun new-source (&key (part nil) (pin nil) (wire nil))
   (make-instance 'source :part part :pin pin :wire wire))
+
+(defmethod equal-part-pin-p ((self source) (part e/part:part) pin-sym)
+  (and (equal (part self) part)
+       (equal (pin self)  pin-sym)))
