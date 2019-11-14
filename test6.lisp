@@ -40,10 +40,14 @@
     (@add-outbound-receiver-to-wire  wire-child-to-main
                                      main-schem :main-schem-out)
 
+    ;; need 5 sources !!
+    (@add-source-to-schematic main-schem main-schem :main-schem-in wire-main-to-child)
+    (@add-source-to-schematic child-schem child-schem :child-schem-in wire-child-to-flow-through-1)
+    (@add-source-to-schematic child-schem flow-through-1 :ft-out wire-flow-through-1-to-flow-through-2)
+    (@add-source-to-schematic child-schem flow-through-2 :ft-out wire-flow-through-2-to-child)
+    (@add-source-to-schematic main-schem child-schem :child-schem-out wire-child-to-main)
 
-    (@inject main-schem :main-schem-in "test 6")
-    (@start-dispatcher)))
-  
+    (@inject main-schem :main-schem-in "test 6")))
   
 (defmethod flow-through ((self e/part:part) (e e/event:event))
   (@send self e))
