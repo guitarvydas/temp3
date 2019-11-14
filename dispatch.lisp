@@ -49,7 +49,9 @@
                 (e/part:name part) data out-pin)
       (let ((wire (e/source:wire s)))
         (dolist (receiver (e/wire::receivers wire))
-          (e/receiver::deliver-event receiver out-event))))))
+          ;; ??? should we be making a new event for each reciever
+          (let ((event (e/event:new-event :pin out-pin :data data)))
+            (e/receiver::deliver-event receiver event)))))))
 
 
 (defun run-first-times ()
