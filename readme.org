@@ -9,3 +9,6 @@
    NIL
    the output pin should be :main-schem-out, not :main-schem-in
 
+   The second test should send the message ("test 6") down from main-schem
+   into child-schem, then through flow-through-1 and flow-through-2 back up
+   to child-schem and then, finally out of main-schem (on pin :main-schem-out).
