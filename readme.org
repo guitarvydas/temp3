@@ -2,3 +2,10 @@
 ** first light - (ql:quickload :temp3), (aa::test0) ==> "CL-USER 22 > (aa::test0)
    consumed message "hello" on incoming pin :IN of "consumer"
    NIL"
+** second test - (ql:quickload :temp3), (aa:test6)
+   see test6.drawio
+   second test fails: CL-USER 22 > (aa::test6)
+   part "main schem" outputs /"test 6"/ on pin :MAIN-SCHEM-IN
+   NIL
+   the output pin should be :main-schem-out, not :main-schem-in
+

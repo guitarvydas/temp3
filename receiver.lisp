@@ -24,9 +24,20 @@
   (make-instance 'outbound-receiver :part part :pin pin))
 
 
-(defmethod receiver-equal ((r1 receiver) (r2 receiver))
+;; two receivers are equal if they have the same type, same part and same pin symbol
+
+(defmethod receiver-equal ((r1 inbound-receiver) (r2 inbound-receiver))
   (and (equal (part r1) (part r2))
        (equal (pin r1) (pin r2))))
+
+(defmethod receiver-equal ((r1 outbound-receiver) (r2 outbound-receiver))
+  (and (equal (part r1) (part r2))
+       (equal (pin r1) (pin r2))))
+
+(defmethod receiver-equal ((r1 receiver) (r2 receiver))
+  nil)
+
+
 
 ;; At this point, the Event contains the originating output pin.  The pin must
 ;; be rewritten to match that of the receiving pin, and the newly-created event is pushed

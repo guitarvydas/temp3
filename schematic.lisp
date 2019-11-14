@@ -32,3 +32,6 @@
       (return-from lookup-source s)))
   (assert nil)) ;; shouldn't happen
 
+(defmethod schematic-input-handler ((self schematic) (e e/event:event))
+  (e/dispatch::lookup-and-deliver self self (e/event:pin e) (e/event:data e)))
+

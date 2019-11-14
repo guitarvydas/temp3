@@ -16,9 +16,11 @@
    #:@set-first-time-handler
    #:@set-input-handler
    #:@add-inbound-receiver-to-wire
+   #:@add-outbound-receiver-to-wire
    #:@add-source-to-schematic
    #:@add-part-to-schematic
    #:@send
+   #:@inject
    #:@start-dispatcher))
 
 (defpackage cl-event-passing-part

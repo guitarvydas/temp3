@@ -1,7 +1,11 @@
 (in-package :cl-event-passing-user)
 
-(defun @new-schematic (&key (name ""))
-  (e/schematic::new-schematic :name name))
+(defun @new-schematic (&key (name "") (input-pins nil) (output-pins nil))
+  (let ((schem (e/schematic::new-schematic :name name)))
+    (setf (e/part:namespace-input-pins schem) input-pins)
+    (setf (e/part:namespace-output-pins schem) output-pins)
+    (setf (e/part:input-handler schem) #'e/schematic::schematic-input-handler)
+    schem))
 
 (defun @new-code (&key (name "") (input-pins nil) (output-pins nil))
   (let ((part (e/part::new-code :name name)))
@@ -32,6 +36,11 @@
     (e/wire::ensure-receiver-not-already-on-wire wire rcv)
     (e/wire::add-receiver wire rcv)))
 
+(defmethod @add-outbound-receiver-to-wire ((wire e/wire:wire) (part e/part:part) pin-sym)
+  (let ((rcv (e/receiver::new-outbound-receiver :part part :pin pin-sym)))
+    (e/wire::ensure-receiver-not-already-on-wire wire rcv)
+    (e/wire::add-receiver wire rcv)))
+
 (defmethod @add-source-to-schematic ((schem e/schematic:schematic) (part e/part:part) pin-sym (wire e/wire:wire))
   (let ((s (e/source::new-source :part part :pin pin-sym :wire wire)))
     (e/schematic::ensure-source-not-already-present schem s)
@@ -45,7 +54,15 @@
 (defmethod @send ((self e/part:part) (e e/event:event))
   (push e (e/part:output-queue self)))
 
+(defmethod @inject ((part e/part:part) pin-sym data)
+  (let ((e (e/event::new-event :pin pin-sym :data data)))
+    (push e (e/part:input-queue part))
+    (run-dispatcher)))
+
 (defun @start-dispatcher ()
+  (run-dispatcher))
+
+(defun run-dispatcher ()
   (e/dispatch::run-first-times)
   (@:loop
    (e/dispatch::dispatch-output-queues)

@@ -33,14 +33,24 @@
         (dolist (out-event out-list)
           (let ((out-pin (e/event:pin out-event))
                 (data (e/event:data out-event)))
-            (let ((s (e/schematic::lookup-source (e/part:parent-schem part) part out-pin)))
-              (if (null s)
-                  ;; source can be null if this is the top-most part (a schematic)
-                  (format *standard-output* "~&part ~S outputs /~S/ on pin /~S/~%"
-                          (e/part:name part) data out-pin)
-                (let ((wire (e/source:wire s)))
-                  (dolist (receiver (e/wire::receivers wire))
-                    (e/receiver::deliver-event receiver out-event)))))))))))
+            (lookup-and-deliver (e/part:parent-schem part) part out-pin data)))))))
+
+
+(defmethod lookup-and-deliver ((parent (eql nil)) (part e/part:part) out-pin data)
+  (format *standard-output* "~&part ~S outputs /~S/ on pin ~S~%"
+          (e/part:name part) data out-pin)
+  nil)
+
+(defmethod lookup-and-deliver ((parent e/schematic:schematic) (part e/part:part) out-pin data)
+  (let ((s (e/schematic::lookup-source (e/part:parent-schem part) part out-pin)))
+    (if (null s)
+        ;; source can be null if this is the top-most part (a schematic)
+        (format *standard-output* "~&part ~S outputs /~S/ on pin ~S~%"
+                (e/part:name part) data out-pin)
+      (let ((wire (e/source:wire s)))
+        (dolist (receiver (e/wire::receivers wire))
+          (e/receiver::deliver-event receiver out-event))))))
+
 
 (defun run-first-times ()
   (dolist (part *all-parts*)
