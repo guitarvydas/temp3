@@ -10,7 +10,7 @@
                         :components ((:file "package")
                                      (:file "util" :depends-on ("package"))
                                      (:file "part" :depends-on ("package"))
-                                     (:file "schematic" :depends-on ("package" "part" "source"))
+                                     (:file "schematic" :depends-on ("package" "part" "source" "event"))
                                      (:file "event" :depends-on ("package"))
                                      (:file "source" :depends-on ("package"))
                                      (:file "receiver" :depends-on ("package" "event"))
