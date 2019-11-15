@@ -1,5 +1,15 @@
 (in-package :cl-event-passing-user)
 
+(defparameter *top-level-part* nil)
+
+;; internal method (not API)
+(defmethod is-top-level-p ((part e/part:part))
+  (assert *top-level-part*)
+  (eq part *top-level-part*))
+
+
+;; API...
+
 (defun @new-schematic (&key (name "") (input-pins nil) (output-pins nil))
   (let ((schem (e/schematic::new-schematic :name name)))
     (setf (e/part:namespace-input-pins schem) input-pins)
@@ -23,6 +33,7 @@
   (e/dispatch::reset))
 
 (defmethod @top-level-schematic ((schem e/schematic:schematic))
+  (setf *top-level-part* schem)
   (e/dispatch::memo-part schem))
 
 (defmethod @set-first-time-handler ((part e/part:part) fn)

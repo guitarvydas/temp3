@@ -27,9 +27,6 @@
   (setf (e/part:parent-schem p) self)
   (push p (internal-parts self)))
 
-(defmethod lookup-source-in-parent ((parent (eql nil)) part e)
-  nil)
-
 (defmethod lookup-source-in-parent ((parent schematic) (self e/part:part) (e e/event:event))
   ;; find part-pin in parent's source list
   (let ((pin-sym (e/event:pin e)))
