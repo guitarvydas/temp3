@@ -50,4 +50,5 @@
     (@inject main-schem :main-schem-in "test 6")))
   
 (defmethod flow-through ((self e/part:part) (e e/event:event))
-  (@send self e))
+  (let ((new-e (e/event:new-event :part self :pin :ft-out)))
+    (@send self new-e)))
