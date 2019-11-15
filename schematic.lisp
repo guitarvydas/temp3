@@ -34,5 +34,7 @@
     (assert nil))) ;; shouldn't happen
 
 (defmethod schematic-input-handler ((self schematic) (e e/event:event))
-  (e/dispatch::lookup-output-source-and-deliver self self e))
+  (unless (e/part:parent-schem self)
+    (error (format nil "~&can't happen: schematic ~S is top-level~&" (e/part:name self))))
+  (e/dispatch::lookup-output-source-and-deliver (e/part:parent-schem self) self e))
 
