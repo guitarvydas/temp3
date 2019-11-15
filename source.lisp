@@ -11,3 +11,6 @@
 (defmethod equal-part-pin-p ((self source) (part e/part:part) pin-sym)
   (and (equal (part self) part)
        (equal (pin self)  pin-sym)))
+
+(defmethod deliver-event ((self source) (e e/event:event))
+  (e/wire::deliver-event (wire self) e))

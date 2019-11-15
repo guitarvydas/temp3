@@ -56,19 +56,19 @@
 
 (defmethod @inject ((part e/part:part) pin-sym data)
   (let ((e (e/event::new-event :pin pin-sym :data data)))
+    (run-first-times)
     (push e (e/part:input-queue part))
-    (run-dispatcher-starting-with-input)))
+    (e/dispatch::dispatch-single-input)
+    (run-dispatcher)))
 
 (defun @start-dispatcher ()
+  (run-first-times)
   (run-dispatcher))
 
-(defun run-dispatcher-starting-with-input ()
-  ;; called only by @inject
-  (e/dispatch::dispatch-single-input)
-  (run-dispatcher))
+(defun run-first-times ()
+  (e/dispatch::run-first-times))
 
 (defun run-dispatcher ()
-  (e/dispatch::run-first-times)
   (@:loop
    (e/dispatch::dispatch-output-queues)
    (@:exit-when (e/dispatch::all-parts-have-empty-input-queues-p))

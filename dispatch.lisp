@@ -21,7 +21,9 @@
   (dolist (part *all-parts*)
     (when (e/part::input-queue part)
       (let ((event (pop (e/part::input-queue part))))
+        (setf (e/part:busy-flag part) t)
         (funcall (e/part::input-handler part) part event)
+        (setf (e/part:busy-flag part) nil)
         (return-from dispatch-single-input part))))
   (assert nil)) ;; can't happen
 
@@ -31,24 +33,8 @@
       (let ((out-list (e/part:output-queue part)))
         (setf (e/part::output-queue part) nil)
         (dolist (out-event out-list)
-          (lookup-output-source-and-deliver (e/part:parent-schem part) part out-event))))))
-
-
-(defmethod lookup-output-source-and-deliver ((parent (eql nil)) (part e/part:part) out-event)
-  (format *standard-output* "~&part ~S outputs /~S/ on pin ~S~%"
-          (e/part:name part) data out-pin)
-  nil)
-
-(defmethod lookup-output-source-and-deliver ((parent e/schematic:schematic) (part e/part:part) (e e/event:event))
-  (let ((s (e/schematic::lookup-source (e/part:parent-schem part) part e)))
-    (if (null s)
-        ;; source can be null if this is the top-most part (a schematic)
-        (format *standard-output* "~&part ~S outputs /~S/ on pin ~S~%"
-                (e/part:name part) (e/event:data e) (e/event:pin e))
-      (let ((wire (e/source:wire s)))
-        (dolist (receiver (e/wire::receivers wire))
-            (e/receiver::deliver-event receiver e))))))
-
+          (let ((source (e/schematic::lookup-source-in-parent (e/part:parent-schem part) part out-event)))
+            (e/source::deliver-event source out-event)))))))          
 
 (defun run-first-times ()
   (dolist (part *all-parts*)

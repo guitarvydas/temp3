@@ -9,6 +9,11 @@
 (defun new-wire (&key (name ""))
   (make-instance 'wire :name name))
 
+(defmethod deliver-event ((wire (eql nil)) (e e/event:event))
+  ;; source can be null if this is the top-most part (a schematic)
+  (format *standard-output* "~&output /~S/ on pin ~S~%"
+          (e/event:data e) (e/event:pin e)))
+
 (defmethod deliver-event ((wire wire) (e e/event:event))
   (mapc #'(lambda (recv)
             (e/receiver::deliver-event recv e))

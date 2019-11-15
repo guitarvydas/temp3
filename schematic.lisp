@@ -27,21 +27,28 @@
   (setf (e/part:parent-schem p) self)
   (push p (internal-parts self)))
 
-(defmethod lookup-source ((parent (eql nil)) part e)
+(defmethod lookup-source-in-parent ((parent (eql nil)) part e)
   nil)
 
-(defmethod lookup-source ((parent schematic) (self e/part:part) (e e/event:event))
+(defmethod lookup-source-in-parent ((parent schematic) (self e/part:part) (e e/event:event))
   ;; find part-pin in parent's source list
   (let ((pin-sym (e/event:pin e)))
     (dolist (s (sources parent))
       (when (e/source::equal-part-pin-p s self pin-sym)
-        (return-from lookup-source s)))
+        (return-from lookup-source-in-parent s)))
+    (assert nil))) ;; shouldn't happen
+
+(defmethod lookup-source-in-self ((self schematic) (e e/event:event))
+  ;; find part-pin in self's source list
+  (let ((pin-sym (e/event:pin e)))
+    (dolist (s (sources self))
+      (when (e/source::equal-part-pin-p s self pin-sym)
+        (return-from lookup-source-in-self s)))
     (assert nil))) ;; shouldn't happen
 
 (defmethod schematic-input-handler ((self schematic) (e e/event:event))
-  (unless (e/part:parent-schem self)
-    (error (format nil "~&can't happen: schematic ~S is top-level~&" (e/part:name self))))
-  (e/dispatch::lookup-output-source-and-deliver (e/part:parent-schem self) self e))
+  (let ((s (lookup-source-in-self self e)))
+    (e/source::deliver-event s e)))
 
 (defmethod busy-p ((self schematic))
   (with-atomic-action
