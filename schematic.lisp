@@ -1,5 +1,10 @@
 (in-package :e/schematic)
 
+(defmacro with-atomic-action (&body body)
+  ;; basically a no-op in this, CALL-RETURN (non-asynch) version of the code
+  ;; this matters only when running in a true interrupting environment (e.g. bare hardware, no O/S)
+  `(progn ,@body))
+
 (defclass schematic (e/part:part)
   ((sources :accessor sources :initform nil) ;; a list of Sources (which contain a list of Wires which contain a list of Receivers)
    (internal-parts :accessor internal-parts :initform nil))) ; a list of Parts
@@ -38,3 +43,9 @@
     (error (format nil "~&can't happen: schematic ~S is top-level~&" (e/part:name self))))
   (e/dispatch::lookup-output-source-and-deliver (e/part:parent-schem self) self e))
 
+(defmethod busy-p ((self schematic))
+  (with-atomic-action
+   (or (e/part:busy-flag self) ;; never practically true in this implementation (based on CALL-RETURN instead of true interrupts)
+       (some #'has-input-queue-p (internal-parts self))
+       (some #'has-output-queue-p (internal-parts self))
+       (some #'busy-p (internal-parts self)))))

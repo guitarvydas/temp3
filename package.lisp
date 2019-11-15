@@ -31,7 +31,9 @@
    #:code
    #:name
    #:input-queue
+   #:has-input-queue-p
    #:output-queue
+   #:has-output-queue-p
    #:busy-flag
    #:namespace-input-pins
    #:namespace-output-pins

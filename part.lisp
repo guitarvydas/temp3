@@ -20,3 +20,12 @@
   (if (string= "" (debug-name p))
       p
     (debug-name p)))
+
+(defmethod busy-p (self code)
+  (busy-flag self))
+
+(defmethod has-input-queue-p (self part)
+  (not (null (input-queue self))))
+
+(defmethod has-output-queue-p (self part)
+  (not (null (output-queue self))))
