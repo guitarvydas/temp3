@@ -7,8 +7,8 @@
   (let ((main-schem (@new-schematic :name "main schem" :input-pins '(main-schem-in) :output-pins '(main-schem-out)))
         (child-schem (@new-schematic :name "child schem" :input-pins '(child-schem-in) :output-pins '(child-schem-out)))
         ;; same code part used (instantiated) twice...
-        (flow-through-1 (@new-code :name "flow-through" :input-pins '(:ft-in) :output-pins '(:ft-out)))
-        (flow-through-2 (@new-code :name "flow-through" :input-pins '(:ft-in) :output-pins '(:ft-out)))
+        (flow-through-1 (@new-code :name "flow-through 1" :input-pins '(:ft-in) :output-pins '(:ft-out)))
+        (flow-through-2 (@new-code :name "flow-through 2" :input-pins '(:ft-in) :output-pins '(:ft-out)))
         ;; 5 wires
         (wire-main-to-child (@new-wire :name "wire main to child"))
         (wire-child-to-flow-through-1 (@new-wire :name "wire child to flow-through-1"))
