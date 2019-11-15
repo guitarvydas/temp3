@@ -22,16 +22,17 @@
   (setf (e/part:parent-schem p) self)
   (push p (internal-parts self)))
 
-(defmethod lookup-source ((parent (eql nil)) self pin)
+(defmethod lookup-source ((parent (eql nil)) part e)
   nil)
 
-(defmethod lookup-source ((parent schematic) (self e/part:part) pin-sym)
+(defmethod lookup-source ((parent schematic) (self e/part:part) (e e/event:event))
   ;; find part-pin in parent's source list
-  (dolist (s (sources parent))
-    (when (e/source::equal-part-pin-p s self pin-sym)
-      (return-from lookup-source s)))
-  (assert nil)) ;; shouldn't happen
+  (let ((pin-sym (e/event:pin e)))
+    (dolist (s (sources parent))
+      (when (e/source::equal-part-pin-p s self pin-sym)
+        (return-from lookup-source s)))
+    (assert nil))) ;; shouldn't happen
 
 (defmethod schematic-input-handler ((self schematic) (e e/event:event))
-  (e/dispatch::lookup-and-deliver self self (e/event:pin e) (e/event:data e)))
+  (e/dispatch::lookup-and-deliver self self e))
 
