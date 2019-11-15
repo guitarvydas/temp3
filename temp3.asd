@@ -12,9 +12,9 @@
                                      (:file "part" :depends-on ("package"))
                                      (:file "schematic" :depends-on ("package" "part" "source" "event"))
                                      (:file "event" :depends-on ("package"))
-                                     (:file "source" :depends-on ("package"))
-                                     (:file "receiver" :depends-on ("package" "event"))
-                                     (:file "wire" :depends-on ("package" "util"))
+                                     (:file "source" :depends-on ("package" "event" "wire"))
+                                     (:file "receiver" :depends-on ("package" "event" "part"))
+                                     (:file "wire" :depends-on ("package" "util" "receiver" ))
                                      (:file "dispatch" :depends-on ("package" "util" "part" "event"))
 				     (:file "api"  :depends-on ("package" "util" "part" "schematic" "event"
                                                                 "source" "receiver" "wire" "dispatch"))
