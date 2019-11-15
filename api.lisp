@@ -57,9 +57,14 @@
 (defmethod @inject ((part e/part:part) pin-sym data)
   (let ((e (e/event::new-event :pin pin-sym :data data)))
     (push e (e/part:input-queue part))
-    (run-dispatcher)))
+    (run-dispatcher-starting-with-input)))
 
 (defun @start-dispatcher ()
+  (run-dispatcher))
+
+(defun run-dispatcher-starting-with-input ()
+  ;; called only by @inject
+  (e/dispatch::dispatch-single-input)
   (run-dispatcher))
 
 (defun run-dispatcher ()
