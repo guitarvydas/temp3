@@ -31,15 +31,15 @@
       (let ((out-list (e/part:output-queue part)))
         (setf (e/part::output-queue part) nil)
         (dolist (out-event out-list)
-          (lookup-and-deliver (e/part:parent-schem part) part out-event))))))
+          (lookup-output-source-and-deliver (e/part:parent-schem part) part out-event))))))
 
 
-(defmethod lookup-and-deliver ((parent (eql nil)) (part e/part:part) out-event)
+(defmethod lookup-output-source-and-deliver ((parent (eql nil)) (part e/part:part) out-event)
   (format *standard-output* "~&part ~S outputs /~S/ on pin ~S~%"
           (e/part:name part) data out-pin)
   nil)
 
-(defmethod lookup-and-deliver ((parent e/schematic:schematic) (part e/part:part) (e e/event:event))
+(defmethod lookup-output-source-and-deliver ((parent e/schematic:schematic) (part e/part:part) (e e/event:event))
   (let ((s (e/schematic::lookup-source (e/part:parent-schem part) part e)))
     (if (null s)
         ;; source can be null if this is the top-most part (a schematic)

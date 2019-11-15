@@ -34,5 +34,5 @@
     (assert nil))) ;; shouldn't happen
 
 (defmethod schematic-input-handler ((self schematic) (e e/event:event))
-  (e/dispatch::lookup-and-deliver self self e))
+  (e/dispatch::lookup-output-source-and-deliver self self e))
 
